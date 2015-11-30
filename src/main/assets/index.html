@@ -1,0 +1,180 @@
+ <!DOCTYPE xhtml>
+ <html>
+   <head>
+	 <base href="." target="_self"> 
+
+	 <link rel='stylesheet' type='text/css' href='app/tabs.css'/>
+	 <link rel='stylesheet' type='text/css' href='app/dtree.css'/>
+	 <link rel='stylesheet' type='text/css' href='app/main.css'/>
+
+	 <script language='JavaScript' type='text/javascript' src='app/tabs.js'></script>
+	 <script language='JavaScript' type='text/javascript' src='app/dtree.js'></script>
+	 <script language='JavaScript' type='text/javascript' src='app/main.js'></script>
+	 <script language='JavaScript' type='text/javascript' src='app/datetimepicker_css.js'></script>
+
+   </head>
+   <body>
+
+	 <div id="container">
+
+	   <div id="header">
+		 <div id="headerleft"><img id="logo"/></div>
+		 <div id="headerright">@@@appversion@@@<br/><div id="export_button" class="buttononoff" title="Download this document as a ZIP file" onclick="javascript:onExport(1);">Export</div></div>
+		 <div id="headercenter">OnOpenDevice: <div id="devicemodel">@@@device_title@@@</div></div>
+	   </div>
+
+	   <div id="body">
+		 <div id="load_progress_parent"><div id="load_progress"></div></div>
+
+		 <div class="simpleTabs">
+		   <ul class="simpleTabsNavigation">
+			 <li><a href="#">Device infos</a></li>
+			 <li><a href="#">Databases</a></li>
+			 <li><a href="#">Accounts</a></li>
+			 <li><a href="#">Applications</a></li>
+			 <li><a href="#">Connectivity</a></li>
+			 <li><a href="#">Telephony</a></li>
+			 <li><a href="#">Record changes</a></li>
+			 <li><a href="#">VSConfig</a></li>
+			 <li><a href="#">Logcat</a></li>
+			 <li><a href="#">Misc.</a></li>
+			 <li><a href="#">Screenshot</a></li>
+		   </ul>
+
+		   <div class="simpleTabsContent">
+			 <h3><u>Device informations:</u></h3>
+			 @@@device_infos@@@
+		   </div>
+
+		   <div class="simpleTabsContent">
+			 <h3><u>Databases</u></h3>
+			 <div id="querytree" class="popup" style="display:none;">
+			   <h2>Choose a table:</h2>
+			   <br/>
+			   <div id="databasestree"></div>
+			   <br/>
+			   <div class="buttononoff" onClick="javascript:document.getElementById('querytree').style.display='none';">Cancel</div>
+			 </div>
+			 <div>
+			   <div style="float:right;">
+				 Date converter: 
+				 <input type="Text" id="query_datetimemilli" maxlength="15" size="15" onchange="javascript:datetools_convert(this);" onkeyup="javascript:datetools_convert(this);" onkeypress="javascript:datetools_convert(this);"/>
+				 <img id="cal_reverse" />
+				 <img id="cal_forward" />
+				 <input type="Text" id="query_datetimeentry" maxlength="25" size="25" onchange="javascript:datetools_convert(this);" onkeyup="javascript:datetools_convert(this);" onkeypress="javascript:datetools_convert(this);"/>
+				 <img id="cal_display" onclick="javascript:NewCssCal('query_datetimeentry','ddMMyyyy','dropdown',true,'24',true)" style="cursor:pointer"/>
+			   </div>
+
+			   <div>
+				 <table id="query_table">
+				   <tr><td>Content URI</td>    <td><input type="TEXT" id="query_uri" size="95" onchange="javascript:redrawQueryForm();"  onkeyup="javascript:redrawQueryForm();"  onkeypress="javascript:redrawQueryForm();" /> <img id="query_open" onclick="javascript:document.getElementById('querytree').style.display='block';" style="cursor:pointer" /> </td></tr>
+				   <tr id="query_tr_projection"><td>Projection</td><td><INPUT type="TEXT" size="100" id="query_projection"/></td></tr>
+				   <tr id="query_tr_selection"><td>Selection</td><td><INPUT type="TEXT" size="100" id="query_selection"/></td></tr>
+				   <tr id="query_tr_sort"><td>Sort</td><td><INPUT type="TEXT" size="100" id="query_sort"/></td></tr>
+				   <tr id="query_tr_begin"><td>Begin</td><td><INPUT type="TEXT" size="100" id="query_begin"/></td></tr>
+				   <tr id="query_tr_end"><td>End</td><td><INPUT type="TEXT" size="100" id="query_end"/></td></tr>
+				   <tr><td colspan="2" id="query_btns">
+					   <div id="query_execute" class="buttononoff" title="Execute a query on the selected table" onClick="javascript:query_execute(false);">Execute</div>
+					   <div id="query_delete" class="hotbuttononoff" style="display:none" title="Delete on same table with the same selection" onClick="javascript:if(confirm('Really delete these rows?')){query_execute(true);};">Delete these rows?</div>
+				   </td></tr>
+				 </table>
+			   </div>
+			</div>
+  			<div id="dbcontent" ></div>
+		  </div>
+
+		  <div class="simpleTabsContent">
+			<h3><u>Accounts:</u></h3>
+			@@@accounts@@@
+		  </div>
+		  <div class="simpleTabsContent">
+			<h3><u>Applications:</u></h3>
+			@@@applications@@@
+		  </div>
+		  <div class="simpleTabsContent">
+			<h3><u>Connectivity:</u></h3>
+			@@@connectivity@@@
+		  </div>
+		  <div class="simpleTabsContent">
+			<h3><u>Telephony:</u></h3>
+			@@@telephony@@@
+		  </div>
+		  <div class="simpleTabsContent" id="div_record">
+			<h3><u>Select what to record:</u></h3>
+			
+			<div class="buttonoff" id="refreshCONTACTS" onClick="javascript:toggleDbRecord('CONTACTS');">Start CONTACTS</div>
+			<div class="buttonoff" id="refreshRAW_CONTACTS" onClick="javascript:toggleDbRecord('RAW_CONTACTS');">Start RAW CONTACTS</div>
+			<div class="buttonoff" id="refreshDATA" onClick="javascript:toggleDbRecord('DATA');">Start DATA</div>
+			<div class="buttonoff" id="refreshGROUPS" onClick="javascript:toggleDbRecord('GROUPS');">Start GROUPS</div>
+			<div class="buttonoff" id="refreshALL" onClick="javascript:toggleDbRecord('ALL');">Start ALL</div>
+			
+			<p></p>
+
+			<div id="recordstree" ></div>
+			<br/>
+  			<div id="diffrecord" ></div>
+
+		  </div>
+
+		  <div class="simpleTabsContent">
+			<form>
+			  <h3>
+				<u>Configure products:</u>
+				<select id="vsconfig_selector" class="vsconfig" onchange="javascript:vsconfig_OnChange(this.value);" ></select>
+				<div id="vsconfig_save"  class="buttononoff" title="Apply this configuration to the selected product" onClick="javascript:vsconfig_onSave(document.getElementById('vsconfig_selector').value);">Save</div>
+			  </h3>
+			  <table id="vsconfig_table" class="vsconfig">
+			  </table>
+			</form>
+			<div id="vsconfigoutput" ></div>
+		  </div>
+
+		  <div class="simpleTabsContent">
+			<h3><u>Logcat:</u><div id="logcat_size" style="display:inline; padding-left: 10px;"></div></h3>
+			<div id="logcat_display" class="buttononoff" title="Request the device to provide latest logs" onClick="javascript:logcat_refresh(false,true);">Refresh</div>
+			<div id="logcat_record" class="buttononoff" title="Start / stop the recording of new logs" onClick="javascript:logcat_toggleRecord();">Start recording</div>
+			<div id="logcat_download" class="buttononoff" title="Download the logs currently displayed as a file" onClick="javascript:downloadLogcat();">Download</div>
+			<div id="logcat_clear" class="buttononoff" title="Delete the logs on the device"  onClick="javascript:logcat_clear();">Clear</div>
+			<div id="logcat"></div>
+		  </div>
+
+		  <div class="simpleTabsContent">
+			<h3><u>Misc infos:</u></h3>
+			@@@miscinfos@@@
+		  </div>
+
+		  <div class="simpleTabsContent">
+			<div id="screenshot_btn"  class="buttononoff" title="Shot the screen now" onClick="javascript:screen_shot();">New snapshot!</div>
+			<div class="boxdelete" id="boxdelete" ondragover="return false" ondrop="drop(event)">
+			  <div id="screenshots_textdrag">drag screenshots here to delete them</div>
+			  <div id="screenshots_box"></div>
+			</div>
+			<div id="screenshots_expunge"  class="hotbuttononoff" title="Delete selected screenshots now" onClick="javascript:screenshots_expunge();">Delete</div>
+			<br/>
+			<p>
+			<div id="clicktodragtext">Click on screenshot to zoom-in:</div>
+			</P>
+			<div class="screenshots" id="screenshots" ondragover="return false" ondrop="drop(event)"></div>
+		  </div>
+		 </div>
+	   </div>
+
+	   <div id="export_popup" class="popup" style="display:none">
+		 <h2 id="export_title">Export information</h2>
+		 <br/>
+		<!--
+		<form id="export_form">
+		  <input type="RADIO" name="export" value="basic">Basic: general information<br/>
+		  <input type="RADIO" name="export" value="medium">Medium: include main tables data<br/>
+		  <input type="RADIO" name="export" value="complete">Complete: include all tables data<br/>
+		  <br/>
+		</form>
+		-->
+		<div id="export_go" class="buttononoff" onclick="javascript:onExport(1);">Go!</div>
+		<div id="export_cancel" class="buttononoff" onclick="javascript:onExport(0);">Cancel</div>
+	  </div>
+
+	  <div id="footer">ledain.org. All rights reserved</div>
+	</div>
+  </body>
+</html>
